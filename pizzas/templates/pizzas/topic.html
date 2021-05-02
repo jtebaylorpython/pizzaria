@@ -1,7 +1,13 @@
 {% extends "pizzas/base.html" %}
 {% block content %}
 
-<p>Pizza Toppings: {{ topic }}</p>
+<p>Pizza: {{ topic }}</p>
+{% if pizza.image %}
+ <p><img src="{{pizza.image.url}}"></p>
+{% else %}
+<p></p>
+{% endif %}
+<div>Toppings></div>
 <ul>
     {% for entry in entries %}
     <li>
@@ -10,6 +16,17 @@
     </li>
     {% empty %}
     <li>There are no toppings for this pizza yet</li>
+    {% endfor %}
+</ul>
+<div>Comments</div>
+<ul>
+    {% for comment in comments %}
+    <li>
+        <p>{{ comment.text }}</p>
+        <p>{{comment.date_added|date:'M d,Y H:i'}}</p>
+    </li>
+    {% empty %}
+    <li>No Comments for this pizza </li>
     {% endfor %}
 </ul>
 {% endblock content %}

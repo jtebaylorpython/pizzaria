@@ -10,6 +10,7 @@
 
     <li>
         <a href="{% url 'pizzas:pizza' pizza.id %}">{{ pizza }}</a>
+        <a href="{% url 'pizzas:comment' pizza.id %}">Add a Comment</a>
     </li>
     {% empty %}
     <li>No pizzas have been added yet.</li>

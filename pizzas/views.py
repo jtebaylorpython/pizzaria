@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Pizza, Toppings
-from .forms import PizzaForm
+from .forms import PizzaForm, CommentForm
 
 
 def index(request):
@@ -20,8 +20,9 @@ def pizza(request, pizza_id):
     pizza = Pizza.objects.get(id=pizza_id)
 
     entries = pizza.toppings_set.order_by("-date_added")
-
-    context = {"pizza": pizza, "entries": entries}
+    comments = pizza.comment_set.order_by("-date_added")
+    context = {"pizza": pizza, "entries": entries, "comments": comments}
+    image = Pizza.objects.get(id=pizza_id)
 
     return render(request, "pizzas/topic.html", context)
 
@@ -36,3 +37,18 @@ def new_pizza(request):
             return redirect("pizzas:pizzas")
     context = {"form": form}
     return render(request, "pizzas/new_topic.html", context)
+
+
+def comment(request, pizza_id):
+    if request.method != "POST":
+        form = CommentForm()
+    else:
+        pizza = Pizza.objects.get(id=pizza_id)
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.pizza = pizza
+            comment.save()
+            return redirect("pizzas:pizzas")
+    context = {"form": form, "pizza_id": pizza_id}
+    return render(request, "pizzas/comment.html", context)
